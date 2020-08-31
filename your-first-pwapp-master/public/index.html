@@ -1,0 +1,424 @@
+<!--
+ Your First PWA Codelab (https://g.co/codelabs/pwa)
+
+ Copyright 2019 Google Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather PWA</title>
+    <meta name="codelab" content="your-first-pwa-v3" />
+    <link rel="stylesheet" type="text/css" href="/styles/inline.css" />
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <!-- CODELAB: Add link rel manifest -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- CODELAB: Add iOS meta tags and icons -->
+    <!-- CODELAB: Add description here -->
+    <!-- CODELAB: Add meta theme-color -->
+  </head>
+  <body>
+    <header class="header">
+      <h1>
+        Weather PWA
+        <a href="https://darksky.net/poweredby/" class="powered-by">
+          Powered by Dark Sky
+        </a>
+      </h1>
+      <button id="butInstall" aria-label="Install" hidden></button>
+      <button id="butRefresh" aria-label="Refresh"></button>
+      <i class="fa" style="font-size: 24px;">&#xf07a;</i>
+      <span class="badge badge-warning" id="lblCartCount"> 0 </span>
+    </header>
+
+    <main class="main">
+      <button id="butAdd" class="fab" aria-label="Add">
+        <span class="icon add"></span>
+      </button>
+
+      <div id="about" class="weather-card">
+        <b>Your First Progressive Web App Codelab</b><br />
+        Get started at
+        <a href="https://g.co/codelabs/pwa">https://g.co/codelabs/pwa</a>.
+        <!-- <input
+          type="button"
+          id="btn"
+          style="right: 0; position: absolute; padding-right: 50px;"
+          value="Scan/Stop"
+        /> -->
+        <button
+          id="AddToCart"
+          aria-label="AddToCart"
+          style="right: 0; position: absolute;"
+        >
+          Add to Cart
+        </button>
+      </div>
+      <div
+        id="scanner-container"
+        style="
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+        "
+      ></div>
+      <div id="scanCode" class="scan-card" style="display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;">
+        <input type="text" id="txtScanResult"  value="" placeholder="BarCode result">
+      </input>
+      <input
+          type="button"
+          id="btn"
+          value="Scan/Stop"
+        />
+      </div> 
+                <!-- style="right: 0; position: absolute; padding-right: 50px;" -->
+      <div id="weather-template" class="weather-card" hidden>
+        <div class="card-spinner">
+          <svg viewBox="0 0 32 32" width="32" height="32">
+            <circle cx="16" cy="16" r="14" fill="none"></circle>
+          </svg>
+        </div>
+        <button class="remove-city">&times;</button>
+        <div class="city-key" hidden></div>
+        <div class="card-last-updated" hidden></div>
+        <div class="location">&nbsp;</div>
+        <div class="date">&nbsp;</div>
+        <div class="description">&nbsp;</div>
+        <div class="current">
+          <div class="visual">
+            <div class="icon"></div>
+            <div class="temperature">
+              <span class="value"></span><span class="scale">°F</span>
+            </div>
+          </div>
+          <div class="description">
+            <div class="humidity">
+              <span class="label">Humidity:</span>
+              <span class="value"></span><span class="scale">%</span>
+            </div>
+            <div class="wind">
+              <span class="label">Wind:</span>
+              <span class="value"></span>
+              <span class="scale">mph</span>
+              <span class="direction"></span>°
+            </div>
+            <div class="sunrise">
+              <span class="label">Sunrise:</span>
+              <span class="value"></span>
+            </div>
+            <div class="sunset">
+              <span class="label">Sunset:</span>
+              <span class="value"></span>
+            </div>
+          </div>
+        </div>
+        <div class="future">
+          <div class="oneday">
+            <div class="date"></div>
+            <div class="icon"></div>
+            <div class="temp-high"><span class="value"></span>°</div>
+            <div class="temp-low"><span class="value"></span>°</div>
+          </div>
+          <div class="oneday">
+            <div class="date"></div>
+            <div class="icon"></div>
+            <div class="temp-high"><span class="value"></span>°</div>
+            <div class="temp-low"><span class="value"></span>°</div>
+          </div>
+          <div class="oneday">
+            <div class="date"></div>
+            <div class="icon"></div>
+            <div class="temp-high"><span class="value"></span>°</div>
+            <div class="temp-low"><span class="value"></span>°</div>
+          </div>
+          <div class="oneday">
+            <div class="date"></div>
+            <div class="icon"></div>
+            <div class="temp-high"><span class="value"></span>°</div>
+            <div class="temp-low"><span class="value"></span>°</div>
+          </div>
+          <div class="oneday">
+            <div class="date"></div>
+            <div class="icon"></div>
+            <div class="temp-high"><span class="value"></span>°</div>
+            <div class="temp-low"><span class="value"></span>°</div>
+          </div>
+          <div class="oneday">
+            <div class="date"></div>
+            <div class="icon"></div>
+            <div class="temp-high"><span class="value"></span>°</div>
+            <div class="temp-low"><span class="value"></span>°</div>
+          </div>
+          <div class="oneday">
+            <div class="date"></div>
+            <div class="icon"></div>
+            <div class="temp-high"><span class="value"></span>°</div>
+            <div class="temp-low"><span class="value"></span>°</div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div id="addDialogContainer">
+      <div class="dialog">
+        <div class="dialog-title">Add new city</div>
+        <div class="dialog-body">
+          <select id="selectCityToAdd" aria-label="City to add">
+            <!--
+            Values are lat/lon values, use Google Maps to find and add
+            additional cities.
+          -->
+            <option value="28.6472799,76.8130727">Dehli, India</option>
+            <option value="-5.7759362,106.1174957">Jakarta, Indonesia</option>
+            <option value="51.5287718,-0.2416815">London, UK</option>
+            <option value="40.6976701,-74.2598666">New York, USA</option>
+            <option value="48.8589507,2.2770202">Paris, France</option>
+            <option value="-64.8251018,-63.496847"
+              >Port Lockroy, Antarctica</option
+            >
+            <option value="37.757815,-122.5076401">San Francisco, USA</option>
+            <option value="31.2243085,120.9162955">Shanghai, China</option>
+            <option value="35.6735408,139.5703032">Tokyo, Japan</option>
+          </select>
+        </div>
+        <div class="dialog-buttons">
+          <button id="butDialogCancel" class="button">Cancel</button>
+          <button id="butDialogAdd" class="button">Add</button>
+        </div>
+      </div>
+    </div>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      /* In order to place the tracking correctly */
+      canvas.drawing,
+      canvas.drawingBuffer {
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+    </style>
+    <script src="/scripts/luxon-1.11.4.js"></script>
+    <script src="/scripts/app.js"></script>
+    <script src="scripts/exampleService.js"></script>
+    <!-- CODELAB: Add the install script here -->
+    <script src="/scripts/install.js"></script>
+    <script src="myIndexedDb.js"></script>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.19.0/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.19.0/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.19.0/firebase-messaging.js"></script>
+    <script src="https://cdn.rawgit.com/serratus/quaggaJS/0420d5e0/dist/quagga.min.js"></script>
+
+    <script>
+      // Bar code scanner initiation
+      var _scannerIsRunning = false;
+      var isFirstTime = true;
+      function startScanner() {
+        Quagga.init(
+          {
+            locate: true,
+            inputStream: {
+              name: "Live",
+              type: "LiveStream",
+              target: document.querySelector("#scanner-container"),
+              constraints: {
+                left: 50,
+                width: 500,
+                height: 320,
+                facingMode: "environment",
+              },
+              area: {
+                // defines rectangle of the detection/localization area
+                top: "0%", // top offset
+                right: "0%", // right offset
+                left: "0%", // left offset
+                bottom: "0%", // bottom offset
+              },
+            },
+            decoder: {
+              readers: [
+                "code_128_reader",
+                "ean_reader",
+                "ean_8_reader",
+                "code_39_reader",
+                "code_39_vin_reader",
+                "codabar_reader",
+                "upc_reader",
+                "upc_e_reader",
+                "i2of5_reader",
+              ],
+              debug: {
+                showCanvas: true,
+                showPatches: true,
+                showFoundPatches: true,
+                showSkeleton: true,
+                showLabels: true,
+                showPatchLabels: true,
+                showRemainingPatchLabels: true,
+                boxFromPatches: {
+                  showTransformed: true,
+                  showTransformedBox: true,
+                  showBB: true,
+                },
+              },
+              multiple: false,
+            },
+          },
+          function (err) {
+            if (err) {
+              console.log(err);
+              return;
+            }
+            Quagga.start();
+            console.log("Initialization finished. Ready to start");
+            // Set flag to is running
+            var x = document.getElementById("scanner-container");
+        x.style.display = "flex";
+            _scannerIsRunning = true;
+          }
+        );
+      }
+
+      Quagga.onDetected(function (result) {
+        var scanResult=document.getElementById('txtScanResult');
+        scanResult.value=result.codeResult.code;
+        // alert("Code - " + result.codeResult.code);
+        console.log(
+          "Barcode detected and processed : [" + result.codeResult.code + "]",
+          result
+        );
+        Quagga.stop();
+        var x = document.getElementById("scanner-container");
+        x.style.display = "none";
+        _scannerIsRunning = false;
+      });
+
+      //Scan button
+      document.getElementById("btn").addEventListener(
+        "click",
+        function () {
+          if (_scannerIsRunning) {
+            Quagga.stop();
+            _scannerIsRunning = false;
+          } else {
+            startScanner();
+          }
+        },
+        false
+      );
+
+      function myFunction() {
+        var x = document.getElementById("myDIV");
+      }
+
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "",
+        authDomain: "",
+        databaseURL: "",
+        projectId: "",
+        storageBucket: "",
+        messagingSenderId: "",
+        appId: "",
+        measurementId: "",
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      firebase.analytics();
+      // CODELAB: Register service worker.
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("/service-worker.js").then((reg) => {
+            // var message=firebase.messaging();
+            // messaging.useServiceWorker(reg);
+            console.log("Service worker registered.", reg);
+
+            //Request a one-off sync
+            navigator.serviceWorker.ready.then(function (reg) {
+              // Initialize count to 0 in cache
+              addObject("cart", { id: "cart_count", count: 0 }).catch((e) =>
+                console.error(e)
+              );
+
+              document
+                .getElementById("AddToCart")
+                .addEventListener("click", (event) => {
+                  // Save to cache IndexDB or CacheAPI .then ( =>
+                  updateObject("cart", "cart_count", {
+                    id: "cart_count",
+                    count: 1,
+                  }).catch((e) => console.error(e));
+                  reg.sync.register("syncCartCount");
+                  if (!navigator.onLine) {
+                    alert(
+                      "Sorry, you are offline. Your request will be processed automatically once the network is established."
+                    );
+                  }
+                });
+            });
+
+            const channel = new BroadcastChannel("syncMessages");
+            channel.onmessage = function (e) {
+              alert(e.data.msg);
+              document.getElementById("lblCartCount").innerHTML = e.data.count;
+            };
+          });
+        });
+      }
+
+      //notification();
+      async function notification() {
+        try {
+          var messaging = firebase.messaging();
+          await messaging.requestPermission();
+          var token = await messaging.getToken();
+          console.log("Created token ->", token);
+
+          // This API call is supposed to be done from the backend
+          var defaultTopicName = "default-test";
+          var url = `https://iid.googleapis.com/iid/v1/${token}/rel/topics/${defaultTopicName}`;
+          var response = await fetch(url, {
+            method: "POST",
+            headers: {
+              Authorization:
+                "key=xxx",
+            },
+          });
+          console.log(response.json());
+          return token;
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    </script>
+  </body>
+</html>
